@@ -7,7 +7,7 @@
   <!-- SEO -->
   <title>Weekendy — афиша мероприятий Москвы в Telegram</title>
   <meta name="description" content="Weekendy — бот в Telegram с афишей мероприятий Москвы. Концерты, выставки, вечеринки, детские события, спорт. Найди чем заняться в выходные — бесплатно." />
-  <meta name="keywords" content="что делать в Москве в выходные, афиша Москвы, мероприятия Москва, куда сходить в Москве, концерты Москва, выставки Москва, Telegram бот афиша, события выходного дня Москва" />
+  <meta name="keywords" content="что делать в Москве в выходные, афиша Москвы, мероприятия Москва, куда сходить в Москве, концерты Москва, выставки Москва, фестивали Москва, настольные игры Москва, квесты Москва, мастер-классы Москва, Telegram бот афиша, события выходного дня Москва, бесплатные мероприятия Москва, афиша на выходные Москва, куда пойти с детьми Москва" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://weekendy.ru/" />
 
@@ -133,7 +133,7 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 100px 24px 60px;
+      padding: 100px 60px 60px;
       position: relative;
       overflow: hidden;
     }
@@ -159,12 +159,13 @@
 
     .hero h1 {
       font-family: 'Unbounded', sans-serif;
-      font-size: clamp(36px, 7vw, 80px);
+      font-size: clamp(48px, 10vw, 120px);
       font-weight: 900;
       line-height: 1.05;
-      letter-spacing: -2px;
+      letter-spacing: -3px;
       margin-bottom: 16px;
-      max-width: 800px;
+      max-width: 1100px;
+      width: 100%;
     }
 
     .hero h1 .accent { color: var(--accent); }
@@ -215,7 +216,7 @@
     .hero-desc {
       font-size: clamp(16px, 2vw, 20px);
       color: var(--muted);
-      max-width: 520px;
+      max-width: 800px;
       margin-bottom: 40px;
       line-height: 1.7;
     }
@@ -532,6 +533,48 @@
       .ticker { animation: none; }
     }
   </style>
+
+  <!-- FAQ Schema для расширенных сниппетов в Яндексе -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Что делать в Москве в выходные?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Weekendy — Telegram-бот с живой афишей Москвы. Концерты, выставки, фестивали, вечеринки, квесты, настольные игры, мастер-классы и детские мероприятия. Бесплатно, без регистрации."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Как найти бесплатные мероприятия в Москве?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "В боте Weekendy можно отфильтровать бесплатные события в Москве по дате и категории. Откройте бота в Telegram и выберите нужные параметры."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Куда сходить с детьми в Москве в выходные?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "В Weekendy есть отдельная категория детских мероприятий Москвы — спектакли, мастер-классы, праздники, квесты для детей. Обновляется ежедневно."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Как добавить своё мероприятие в афишу?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Откройте бота @weekendy_add_bot в Telegram и заполните форму. Размещение бесплатное, мероприятие появится в поиске после проверки."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -586,11 +629,11 @@
 
   <div class="hero-stats">
     <div class="stat">
-      <div class="stat-num">500+</div>
+      <div class="stat-num">1000+</div>
       <div class="stat-label">событий в базе</div>
     </div>
     <div class="stat">
-      <div class="stat-num">50+</div>
+      <div class="stat-num">300+</div>
       <div class="stat-label">каналов-источников</div>
     </div>
     <div class="stat">
@@ -675,6 +718,26 @@
       <div class="cat-emoji">🍷</div>
       <div class="cat-name">Гастрономия</div>
       <div class="cat-hint">дегустации, фестивали еды</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-emoji">🎪</div>
+      <div class="cat-name">Фестивали</div>
+      <div class="cat-hint">городские, музыкальные</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-emoji">🎲</div>
+      <div class="cat-name">Настольные игры</div>
+      <div class="cat-hint">клубы, турниры, вечера</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-emoji">🔐</div>
+      <div class="cat-name">Квесты</div>
+      <div class="cat-hint">комнаты, перформансы</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-emoji">🎨</div>
+      <div class="cat-name">Мастер-классы</div>
+      <div class="cat-hint">рисование, керамика, кулинария</div>
     </div>
   </div>
 </section>
