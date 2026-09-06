@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<!--
+  ШАБЛОН СТРАНИЦЫ БОТА (каталог weekendy.ru/bots/*)
+  Под новый бот менять: <title>/description/og, ссылки (искать igra_leela_bot и leelanr),
+  контент секций, JSON-LD в конце. Блок #field со 72 клетками — только для Лилы, для
+  другого бота удалять целиком вместе со скриптом внизу.
+-->
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Игра Лила онлайн в Telegram — бесплатно, 72 клетки, с проводником</title>
+<meta name="description" content="Трансформационная игра Лила в Telegram-боте: классическое поле 72 клетки, змеи и стрелы, рефлексию по игре. Играйте бесплатно — один ход в день. В основе бота — 4 года живой практики и 150+ проведённых игр.">
+<link rel="canonical" href="https://weekendy.ru/bots/leela/">
+<meta property="og:title" content="Игра Лила онлайн в Telegram — бесплатно, 72 клетки">
+<meta property="og:description" content="72 клетки, змеи и стрелы, ход в день. Не даёт ответов — задаёт вопросы, которые сами себе задать не решаемся.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://weekendy.ru/bots/leela/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230c0a0a'/%3E%3Ccircle cx='50' cy='50' r='20' fill='none' stroke='%23e0a95a' stroke-width='3'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%23e0a95a'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/cormorant-cyrillic-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/golos-text-cyrillic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Cormorant';font-style:normal;font-weight:300;font-display:swap;
+src:url('fonts/cormorant-cyrillic-300-normal.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Cormorant';font-style:normal;font-weight:300;font-display:swap;
+src:url('fonts/cormorant-latin-300-normal.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215}
+@font-face{font-family:'Cormorant';font-style:italic;font-weight:300;font-display:swap;
+src:url('fonts/cormorant-cyrillic-300-italic.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Cormorant';font-style:italic;font-weight:300;font-display:swap;
+src:url('fonts/cormorant-latin-300-italic.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215}
+@font-face{font-family:'Cormorant';font-style:normal;font-weight:400;font-display:swap;
+src:url('fonts/cormorant-cyrillic-400-normal.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Cormorant';font-style:normal;font-weight:400;font-display:swap;
+src:url('fonts/cormorant-latin-400-normal.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215}
+@font-face{font-family:'Cormorant';font-style:italic;font-weight:400;font-display:swap;
+src:url('fonts/cormorant-cyrillic-400-italic.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Cormorant';font-style:italic;font-weight:400;font-display:swap;
+src:url('fonts/cormorant-latin-400-italic.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215}
+@font-face{font-family:'Golos Text';font-style:normal;font-weight:400;font-display:swap;
+src:url('fonts/golos-text-cyrillic-400-normal.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Golos Text';font-style:normal;font-weight:400;font-display:swap;
+src:url('fonts/golos-text-latin-400-normal.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215}
+@font-face{font-family:'Golos Text';font-style:normal;font-weight:500;font-display:swap;
+src:url('fonts/golos-text-cyrillic-500-normal.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Golos Text';font-style:normal;font-weight:500;font-display:swap;
+src:url('fonts/golos-text-latin-500-normal.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215}
+@font-face{font-family:'Golos Text';font-style:normal;font-weight:600;font-display:swap;
+src:url('fonts/golos-text-cyrillic-600-normal.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Golos Text';font-style:normal;font-weight:600;font-display:swap;
+src:url('fonts/golos-text-latin-600-normal.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215}
+
+  :root{
+    --void:#120c09;
+    --void-2:#1a1109;
+    --smoke:#2a2523;
+    --bone:#e8e0d2;
+    --bone-dim:#9c9384;
+    --gold:#e0a95a;
+    --gold-deep:#b9853c;
+    --madder:#a33f30;
+    --line:rgba(232,224,210,.13);
+    --maxw:680px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:74px}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 70% 50% at 70% 0%, rgba(224,169,90,.13), transparent 60%),
+      radial-gradient(ellipse 60% 45% at 10% 30%, rgba(163,63,48,.10), transparent 65%),
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(224,169,90,.06), transparent 60%),
+      var(--void);
+    background-attachment:fixed;
+    color:var(--bone);
+    font-family:'Golos Text',system-ui,sans-serif;
+    font-size:18px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:'Cormorant',Georgia,serif;font-weight:300;line-height:1.15;margin:0 0 .5em}
+  h1{font-size:clamp(44px,10vw,86px);letter-spacing:-.01em}
+  h2{font-size:clamp(30px,6vw,46px)}
+  p{margin:0 0 1.15em}
+  a{color:var(--gold)}
+  strong{font-weight:600}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  section{padding:96px 0;position:relative}
+  .rule{
+    max-width:var(--maxw);margin:0 auto;padding:6px 24px;
+    display:flex;align-items:center;gap:16px;
+    color:rgba(224,169,90,.5);
+  }
+  .rule::before,.rule::after{
+    content:'';flex:1;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(224,169,90,.35),transparent);
+  }
+  .rule .mnd{width:76px;height:76px;flex:0 0 auto;color:var(--gold);opacity:.75}
+  @media (prefers-reduced-motion:no-preference){
+    .rule .mnd{animation:turn 60s linear infinite}
+  }
+  @keyframes turn{to{transform:rotate(360deg)}}
+
+  .btn{
+    display:inline-block;
+    background:transparent;
+    color:var(--gold);
+    border:1px solid var(--gold-deep);
+    font-family:'Golos Text',sans-serif;font-weight:500;font-size:16.5px;
+    text-decoration:none;padding:15px 34px;border-radius:999px;cursor:pointer;
+    position:relative;
+    transition:background .25s,color .25s,box-shadow .35s,border-color .25s;
+    box-shadow:0 0 18px rgba(224,169,90,.10);
+  }
+  .btn:hover,.btn:focus-visible{
+    background:var(--gold);color:var(--void);
+    box-shadow:0 0 26px rgba(224,169,90,.35), 0 0 60px rgba(224,169,90,.16);
+  }
+  .btn-solid{
+    background:linear-gradient(180deg,#eab86c,var(--gold));
+    color:var(--void);border-color:var(--gold);
+    box-shadow:0 0 22px rgba(224,169,90,.22), 0 6px 20px rgba(0,0,0,.35);
+  }
+  .btn-solid:hover{
+    background:linear-gradient(180deg,#f3d59a,#e8c079);
+    border-color:var(--bone);
+    box-shadow:0 0 34px rgba(224,169,90,.45), 0 0 70px rgba(224,169,90,.2);
+  }
+  /* дыхание свечения у главных кнопок */
+  @media (prefers-reduced-motion:no-preference){
+    #hero .btn-solid,.modal-box .btn{animation:glow 4.5s ease-in-out infinite}
+    #hero .btn-solid:hover,.modal-box .btn:hover{animation:none}
+  }
+  @keyframes glow{
+    0%,100%{box-shadow:0 0 16px rgba(224,169,90,.16), 0 6px 20px rgba(0,0,0,.35)}
+    50%{box-shadow:0 0 30px rgba(224,169,90,.34), 0 6px 20px rgba(0,0,0,.35)}
+  }
+  .btn-ghost{color:var(--bone-dim);font-size:16.5px;text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px}
+  .btn-ghost:hover{color:var(--bone)}
+  .fine{font-size:15.5px;color:var(--bone-dim)}
+  .cta-row{margin-top:34px;display:flex;flex-wrap:wrap;gap:22px;align-items:center}
+
+
+  /* верхняя навигация */
+  #nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:transparent;
+    border-bottom:1px solid transparent;
+    transition:background .3s ease,border-color .3s ease,backdrop-filter .3s ease;
+  }
+  #nav.show{
+    background:rgba(11,8,6,.86);
+    backdrop-filter:blur(12px);
+    border-bottom-color:rgba(224,169,90,.16);
+  }
+  /* на первом экране кнопку в панели не показываем — она и так есть в тексте */
+  #nav:not(.show) .nav-cta{opacity:0;pointer-events:none}
+  #nav .nav-cta{transition:opacity .3s ease}
+  .nav-in{
+    max-width:1060px;margin:0 auto;padding:10px 24px;
+    display:flex;align-items:center;gap:24px;
+  }
+  .nav-logo{
+    display:flex;flex-direction:column;gap:1px;
+    text-decoration:none;line-height:1.1;
+  }
+  .nav-logo .nl-name{
+    font-family:'Cormorant',serif;font-size:29px;color:var(--gold);letter-spacing:.02em;
+  }
+  .nav-logo .nl-sub{font-size:12.5px;color:var(--bone-dim);letter-spacing:.02em}
+  .nav-links{display:flex;gap:22px;margin-left:auto}
+  .nav-links a{
+    color:var(--bone-dim);text-decoration:none;font-size:16px;
+    padding:4px 0;border-bottom:1px solid transparent;transition:color .2s,border-color .2s;
+  }
+  .nav-links a:hover{color:var(--bone);border-color:rgba(224,169,90,.5)}
+  .nav-cta{padding:9px 22px;font-size:15px;animation:none}
+  @media(max-width:820px){
+    .nav-links{display:none}
+    .nav-cta{margin-left:auto}
+    .nav-in{padding:8px 18px}
+  }
+
+  /* ——— СЦЕНА: свет и дым ——— */
+  #hero{
+    min-height:100svh;
+    display:flex;align-items:center;
+    padding:120px 0 60px;
+    overflow:hidden;
+  }
+  .smoke-layer{
+    position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:url('img/smoke.webp') no-repeat right center/cover;
+    opacity:.85;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.35) 34%,#000 62%),linear-gradient(180deg,#000 60%,transparent 96%);
+    mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.35) 34%,#000 62%),linear-gradient(180deg,#000 60%,transparent 96%);
+    -webkit-mask-composite:source-in;
+    mask-composite:intersect;
+  }
+  .smoke-layer::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg,var(--void) 0%,rgba(18,12,9,.86) 30%,rgba(18,12,9,.25) 60%,transparent 100%);
+  }
+  @media(max-width:760px){
+    .smoke-layer{opacity:.5;background-position:70% center}
+    .smoke-layer::after{background:linear-gradient(180deg,rgba(18,12,9,.55),rgba(18,12,9,.9))}
+  }
+
+  /* мандала на 16 лепестков — мерцает и медленно вращается */
+  .mandala16{
+    position:absolute;
+    top:50%;left:auto;right:-34%;
+    width:min(150vh,1300px);height:min(150vh,1300px);
+    transform:translateY(-50%);
+    z-index:0;pointer-events:none;
+    opacity:.3;
+    filter:drop-shadow(0 0 26px rgba(224,169,90,.22));
+  }
+  .mandala16 .p16,.mandala16 .p12{transform-origin:300px 300px}
+  @media (prefers-reduced-motion:no-preference){
+    .mandala16{animation:shimmer 9s ease-in-out infinite}
+    .mandala16 .p16{animation:spin16 150s linear infinite}
+    .mandala16 .p12{animation:spin16 110s linear infinite reverse}
+  }
+  @keyframes shimmer{
+    0%,100%{opacity:.16}
+    45%{opacity:.42}
+    70%{opacity:.24}
+  }
+  @keyframes spin16{to{transform:rotate(360deg)}}
+  @media(max-width:900px){
+    .mandala16{right:-56%;top:50%;width:170vw;height:170vw;opacity:.22}
+  }
+
+  .shaft{
+    position:absolute;top:-40vh;left:58%;
+    width:75vw;height:170vh;
+    transform:translateX(-50%) rotate(9deg);
+    background:linear-gradient(180deg,rgba(255,214,150,.20),rgba(255,214,150,.05) 45%,transparent 78%);
+    filter:blur(42px);
+    pointer-events:none;z-index:1;
+  }
+  #hero .wrap{position:relative;z-index:2}
+  .kicker{
+    font-family:'Cormorant',serif;font-size:clamp(24px,3.4vw,34px);
+    color:var(--gold);margin:0 0 20px;
+    line-height:1.2;
+    display:inline-block;
+    padding-bottom:12px;
+    border-bottom:1px solid rgba(224,169,90,.35);
+  }
+  #hero .lede{font-size:19px;color:var(--bone);max-width:34ch}
+  #hero h1 em{font-style:italic;color:var(--gold)}
+
+  @media (prefers-reduced-motion:no-preference){
+    .smoke-layer{animation:waft 40s ease-in-out infinite alternate}
+  }
+  @keyframes waft{from{transform:scale(1.04) translateX(0)}to{transform:scale(1.14) translateX(-2%)}}
+  @keyframes emerge{from{opacity:0;transform:translateY(14px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+
+  /* подсказка прокрутки */
+  .scroll-hint{
+    position:absolute;left:50%;bottom:26px;
+    transform:translateX(-50%);
+    width:26px;height:42px;
+    border:1px solid rgba(224,169,90,.45);
+    border-radius:999px;
+    display:flex;justify-content:center;
+    padding-top:8px;
+    z-index:3;
+  }
+  .scroll-hint span{
+    width:3px;height:8px;border-radius:2px;background:var(--gold);
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .scroll-hint span{animation:drop 1.9s ease-in-out infinite}
+  }
+  @keyframes drop{
+    0%,100%{transform:translateY(0);opacity:1}
+    60%{transform:translateY(14px);opacity:0}
+  }
+  @media(max-height:700px){.scroll-hint{display:none}}
+
+  /* ——— ЖИВОЕ ПОЛЕ ——— */
+  #field{
+    background:transparent;
+    overflow:clip;              /* clip не режет всплывающие подсказки, в отличие от hidden */
+  }
+  #field::before{
+    content:'';position:absolute;inset:-2px;z-index:0;
+    background:url('img/mandala.webp') no-repeat center center/cover;
+    opacity:.7;
+    -webkit-mask-image:radial-gradient(ellipse 72% 56% at 50% 50%,#000 0%,rgba(0,0,0,.45) 46%,transparent 76%);
+    mask-image:radial-gradient(ellipse 72% 56% at 50% 50%,#000 0%,rgba(0,0,0,.45) 46%,transparent 76%);
+  }
+  #field::after{
+    content:'';position:absolute;inset:0;z-index:0;
+    background:
+      radial-gradient(ellipse 46% 40% at 50% 58%, rgba(18,12,9,.88) 0%, rgba(18,12,9,.55) 55%, transparent 100%),
+      linear-gradient(180deg, rgba(18,12,9,.75) 0%, rgba(18,12,9,.15) 22%, rgba(18,12,9,.15) 78%, rgba(18,12,9,.75) 100%);
+  }
+  #field .wrap{position:relative;z-index:1}
+  .field-head{text-align:center;margin-bottom:38px}
+  .field-head h2{margin-bottom:.3em}
+  .field-head p{color:var(--bone-dim);max-width:44ch;margin:0 auto}
+  .board{
+    display:grid;
+    grid-template-columns:repeat(9,1fr);
+    gap:3px;
+    max-width:520px;margin:0 auto;
+    padding:14px;
+    border:1px solid rgba(224,169,90,.28);
+    border-radius:14px;
+    background:rgba(14,9,6,.55);
+    backdrop-filter:blur(2px);
+    box-shadow:inset 0 0 60px rgba(224,169,90,.07), 0 20px 60px rgba(0,0,0,.5);
+  }
+  .cell{
+    aspect-ratio:1;
+    background:radial-gradient(circle at 50% 40%, rgba(224,169,90,.10), rgba(20,13,9,.55));
+    border:1px solid rgba(224,169,90,.20);
+    border-radius:4px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Cormorant',serif;font-size:15px;font-weight:500;color:rgba(240,210,160,.88);
+    transition:background .35s,color .35s,box-shadow .35s,border-color .35s;
+  }
+
+  /* подсказка с названием клетки */
+  .cell{position:relative}
+  .cell::after{
+    content:attr(data-nm);
+    position:absolute;bottom:calc(100% + 8px);left:50%;
+    transform:translateX(-50%) translateY(4px);
+    background:rgba(12,8,5,.96);
+    border:1px solid rgba(224,169,90,.4);
+    border-radius:999px;
+    color:var(--gold);
+    font-family:'Golos Text',sans-serif;font-size:13px;white-space:nowrap;
+    padding:6px 14px;
+    opacity:0;pointer-events:none;
+    transition:opacity .18s,transform .18s;
+    z-index:20;
+  }
+  .cell:hover::after,.cell:focus-visible::after,.cell.tapped::after{opacity:1;transform:translateX(-50%) translateY(0)}
+  .cell:hover{background:rgba(224,169,90,.22);border-color:rgba(224,169,90,.5);cursor:default}
+  /* у крайних колонок подсказку прижимаем к краю, чтобы не улетала за поле */
+  .board .cell:nth-child(9n+1)::after{left:0;transform:translateX(0) translateY(4px)}
+  .board .cell:nth-child(9n+1):hover::after{transform:translateX(0) translateY(0)}
+  .board .cell:nth-child(9n)::after{left:auto;right:0;transform:translateX(0) translateY(4px)}
+  .board .cell:nth-child(9n):hover::after{transform:translateX(0) translateY(0)}
+  /* верхний ряд — подсказка снизу, иначе упирается в край блока */
+  .board .cell:nth-child(-n+9)::after{
+    bottom:auto;top:calc(100% + 8px);
+    transform:translateX(-50%) translateY(-4px);
+  }
+  .board .cell:nth-child(-n+9):hover::after,
+  .board .cell:nth-child(-n+9):focus-visible::after{transform:translateX(-50%) translateY(0)}
+
+  .cell.here{
+    background:var(--gold);color:var(--void);font-weight:600;
+    box-shadow:0 0 22px rgba(224,169,90,.55);
+  }
+  .cell.trail{background:rgba(224,169,90,.20);color:var(--bone);border-color:rgba(224,169,90,.45)}
+  .cell.goal{border-color:var(--gold);color:var(--gold);box-shadow:inset 0 0 14px rgba(224,169,90,.35)}
+  .readout{
+    max-width:520px;margin:26px auto 0;
+    min-height:96px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;
+  }
+  .readout .num{font-family:'Cormorant',serif;font-size:17px;color:var(--bone-dim);letter-spacing:.08em}
+  .readout .nm{font-family:'Cormorant',serif;font-size:clamp(26px,5vw,38px);color:var(--gold);line-height:1.2;margin:2px 0 6px}
+  .readout .say{color:var(--bone-dim);font-size:17px;max-width:44ch}
+  .roll-row{display:flex;justify-content:center;gap:16px;align-items:center;margin-top:26px;flex-wrap:wrap}
+  .die{
+    width:58px;height:58px;border:1px solid var(--gold-deep);border-radius:8px;
+    background:transparent;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Cormorant',serif;font-size:30px;color:var(--gold);
+  }
+  .die:hover{background:rgba(224,169,90,.1)}
+  .die.spin{animation:tumble .45s ease}
+  @keyframes tumble{50%{transform:rotate(180deg) scale(.85)}100%{transform:rotate(360deg)}}
+    .reset{
+    background:none;border:1px solid transparent;color:var(--bone-dim);font-size:16px;
+    cursor:pointer;font-family:inherit;padding:8px 18px;border-radius:999px;
+    transition:color .2s,border-color .25s,background .25s;
+  }
+  .reset:hover{color:var(--bone);border-color:rgba(224,169,90,.3);background:rgba(224,169,90,.06)}
+
+
+  /* карточка клетки в демо */
+  .readout .card[hidden]{display:none}
+  .readout .card{
+    max-width:560px;margin:18px auto 0;text-align:left;
+    border:1px solid rgba(224,169,90,.3);border-radius:14px;
+    background:rgba(14,9,6,.72);
+    padding:20px 22px;
+    animation:cardin .45s ease-out both;
+  }
+  @keyframes cardin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .readout .card p{margin:0 0 12px}
+  .readout .card p:last-child{margin-bottom:0}
+  .readout .ci{color:var(--bone);font-size:17px;line-height:1.6}
+  .readout .cq{
+    font-family:'Cormorant',serif;font-style:italic;font-size:22px;
+    color:var(--gold);line-height:1.35;
+  }
+  .readout .ca{color:var(--bone-dim);font-size:16px}
+  .readout .ca::before{content:'Действие на сегодня: ';color:var(--gold-deep)}
+
+  /* кнопка кубика — видно, что это кнопка */
+  .die{
+    width:auto;height:auto;padding:12px 22px 12px 16px;
+    display:inline-flex;align-items:center;gap:12px;
+    border:1px solid var(--gold);border-radius:999px;
+    background:linear-gradient(180deg,#eab86c,var(--gold));color:var(--void);cursor:pointer;
+    transition:background .25s,box-shadow .35s,border-color .25s;
+    font-family:'Golos Text',sans-serif;
+    box-shadow:0 0 0 0 rgba(224,169,90,.45);
+  }
+    .die:hover{
+    background:linear-gradient(180deg,#f3d59a,#e8c079);border-color:var(--bone);
+    box-shadow:0 0 30px rgba(224,169,90,.4);
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .die.idle{animation:pulse 2.6s ease-out infinite}
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(224,169,90,.45)}
+    70%{box-shadow:0 0 0 16px rgba(224,169,90,0)}
+    100%{box-shadow:0 0 0 0 rgba(224,169,90,0)}
+  }
+  .die .pip{font-family:'Cormorant',serif;font-size:34px;line-height:1}
+  .die .die-label{font-size:16.5px;font-weight:500}
+  .die.spin .pip{animation:tumble .45s ease}
+
+
+
+  /* модальное окно после третьего ряда */
+  .modal[hidden]{display:none}
+  .modal{
+    position:fixed;inset:0;z-index:200;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;
+    background:rgba(8,5,4,.82);
+    backdrop-filter:blur(6px);
+    animation:fadein .3s ease-out both;
+  }
+  .modal-box{
+    max-width:520px;width:100%;
+    background:linear-gradient(180deg,#1c1309,#120c08);
+    border:1px solid rgba(224,169,90,.45);
+    border-radius:18px;
+    padding:38px 34px 30px;
+    text-align:center;
+    box-shadow:0 30px 80px rgba(0,0,0,.6), inset 0 0 60px rgba(224,169,90,.06);
+    animation:boxin .45s cubic-bezier(.2,.7,.3,1) both;
+  }
+  .modal-box .m-mnd{width:64px;height:64px;color:var(--gold);opacity:.85;margin-bottom:12px}
+  .modal-box h3{font-family:'Cormorant',serif;font-weight:300;font-size:32px;color:var(--gold);margin:0 0 14px}
+  .modal-box p{color:var(--bone-dim);font-size:17px;margin:0 0 26px}
+  .modal-box .btn{width:100%;text-align:center}
+  .m-close{display:block;margin:18px auto 0}
+  .modal-box{position:relative}
+  .m-x{
+    position:absolute;top:12px;right:14px;
+    width:38px;height:38px;border-radius:999px;
+    background:none;border:1px solid transparent;
+    color:var(--bone-dim);font-size:26px;line-height:1;cursor:pointer;
+    transition:color .2s,border-color .2s;
+  }
+  .m-x:hover{color:var(--gold);border-color:rgba(224,169,90,.35)}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  @keyframes boxin{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+  @media(max-width:600px){
+    .modal-box{padding:30px 22px 24px}
+    .modal-box h3{font-size:27px}
+  }
+
+
+  /* акцент на бесплатных днях */
+  .big-free{
+    font-family:'Cormorant',serif;font-size:clamp(26px,4vw,36px);
+    color:var(--gold);line-height:1.25;margin-bottom:.5em;
+  }
+  /* подарок за приглашение */
+  .gift{
+    margin:34px 0 10px;padding:26px 28px;
+    border:1px solid rgba(224,169,90,.4);
+    border-radius:16px;
+    background:rgba(224,169,90,.07);
+    box-shadow:0 0 34px rgba(224,169,90,.08);
+  }
+  .gift h3{
+    font-family:'Cormorant',serif;font-weight:400;font-size:26px;
+    color:var(--gold);margin:0 0 10px;
+  }
+  .gift p{margin:0;color:var(--bone)}
+
+  /* ——— ТЕКСТОВЫЕ БЛОКИ ——— */
+  .quiet{color:var(--bone-dim)}
+  .pull{
+    font-family:'Cormorant',serif;font-size:clamp(24px,4.4vw,32px);
+    font-style:italic;line-height:1.3;color:var(--bone);
+    margin:38px 0;padding-left:22px;border-left:1px solid var(--gold-deep);
+  }
+  .steps{list-style:none;margin:0;padding:0;counter-reset:s}
+  .steps li{padding:26px 0;border-bottom:1px solid var(--line)}
+  .steps li:last-child{border-bottom:none}
+  .steps h3{
+    font-family:'Golos Text',sans-serif;font-weight:600;font-size:19px;
+    margin:0 0 8px;display:flex;gap:12px;align-items:baseline;
+  }
+  .steps h3::before{
+    counter-increment:s;content:counter(s);
+    font-family:'Cormorant',serif;font-size:20px;color:var(--gold);
+  }
+  .steps p{margin:0;color:var(--bone-dim)}
+
+  #live{overflow:hidden}
+  .lotus-layer{
+    position:absolute;inset:-2px;z-index:0;pointer-events:none;
+    background:url('img/lotus.webp') no-repeat center 45%/cover;
+    opacity:.95;
+    -webkit-mask-image:radial-gradient(ellipse 70% 56% at 50% 50%,#000 0%,rgba(0,0,0,.45) 46%,transparent 76%);
+    mask-image:radial-gradient(ellipse 70% 56% at 50% 50%,#000 0%,rgba(0,0,0,.45) 46%,transparent 76%);
+  }
+  .lotus-layer::after{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse 48% 56% at 50% 50%, rgba(18,12,9,.86) 0%, rgba(18,12,9,.55) 58%, rgba(18,12,9,.12) 100%);
+  }
+  #live .wrap{position:relative;z-index:1}
+  .plans{margin:24px 0 6px;display:grid;gap:10px}
+  .plan{
+    display:grid;grid-template-columns:1fr auto;gap:6px 20px;
+    padding:20px 24px;
+    border:1px solid var(--line);border-radius:16px;
+    background:rgba(14,9,6,.32);
+    align-items:baseline;
+  }
+  .plan .nm{font-weight:600;font-size:19px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .plan .pr{font-family:'Cormorant',serif;font-size:28px;color:var(--gold);white-space:nowrap;text-align:right}
+  .plan .pr span{font-size:15px;font-family:'Golos Text',sans-serif;color:var(--bone-dim)}
+  .plan .ds{grid-column:1 / -1;color:var(--bone-dim);font-size:16.5px;max-width:54ch}
+  .plan.rec{border-color:rgba(224,169,90,.55);background:rgba(224,169,90,.07);box-shadow:0 0 34px rgba(224,169,90,.09)}
+  .plan .mark{
+    font-family:'Golos Text',sans-serif;font-weight:500;font-size:13px;color:var(--gold);
+    border:1px solid rgba(224,169,90,.45);border-radius:999px;padding:3px 12px;
+  }
+  .lead-plans{color:var(--bone-dim);font-size:16.5px;margin:30px 0 0}
+  .plans.long .plan{background:transparent;padding:17px 24px}
+  .plans.long .plan .pr{font-size:24px}
+  .plan .save{
+    grid-column:2;grid-row:1;
+    justify-self:end;align-self:center;
+    font-family:'Golos Text',sans-serif;font-size:14px;font-weight:600;
+    color:var(--gold);border:1px solid rgba(224,169,90,.45);
+    border-radius:999px;padding:3px 12px;margin-top:6px;
+  }
+  .plan .save.big{
+    background:var(--gold);color:var(--void);border-color:var(--gold);
+    font-size:16px;padding:5px 16px;
+    box-shadow:0 0 22px rgba(224,169,90,.35);
+  }
+  .plans.long .plan{grid-template-columns:1fr auto auto;gap:6px 16px}
+  .plans.long .plan .pr{grid-column:2}
+  .plans.long .plan .save{grid-column:3}
+  .plan.best{border-color:rgba(224,169,90,.5);background:rgba(224,169,90,.05)}
+  @media(max-width:600px){
+    .plans.long .plan{grid-template-columns:1fr auto}
+    .plans.long .plan .save{grid-column:2;grid-row:2;justify-self:end}
+  }
+
+  .cols{display:grid;gap:34px}
+  .cols ul{margin:0;padding-left:20px;color:var(--bone);font-size:18px}
+  .cols li{margin-bottom:12px}
+  .cols h3{font-family:'Golos Text',sans-serif;font-size:19px;font-weight:600;color:var(--gold);margin-bottom:14px}
+
+  #reviews .src{color:var(--bone-dim);font-size:16px;margin-bottom:6px}
+  .review{padding:22px 0;border-bottom:1px solid var(--line)}
+  .review:last-child{border-bottom:none}
+  .review p{font-family:'Cormorant',serif;font-size:24px;font-style:italic;margin:0 0 8px;line-height:1.4}
+  .review span{font-size:15.5px;color:var(--bone-dim)}
+
+  details{border-bottom:1px solid var(--line);padding:18px 0}
+  summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;align-items:center;font-size:18.5px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:'';width:9px;height:9px;border-right:1px solid var(--gold);border-bottom:1px solid var(--gold);transform:rotate(45deg);flex:0 0 auto;transition:transform .2s}
+  details[open] summary::after{transform:rotate(225deg)}
+  details p{margin:14px 0 0;color:var(--bone-dim)}
+
+  footer{padding:60px 0 130px;color:var(--bone-dim);font-size:16px;border-top:1px solid var(--line)}
+  footer p{margin:0 0 6px}
+  footer .f-lead{font-family:'Cormorant',serif;font-size:26px;color:var(--gold);margin-bottom:12px}
+  footer .f-legal{
+    margin-top:26px;padding-top:18px;
+    border-top:1px solid rgba(224,169,90,.14);
+    font-size:12.5px;line-height:1.55;opacity:1;color:#8e8578;
+    max-width:100%;
+    display:flex;flex-wrap:wrap;gap:6px 26px;
+  }
+  footer .f-legal p{margin:0;flex:1 1 260px}
+
+  #dock{
+    position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:rgba(11,10,9,.92);
+    backdrop-filter:blur(10px);
+    border-top:1px solid var(--line);
+    padding:12px 20px;
+    display:flex;justify-content:center;align-items:center;gap:18px;
+    transform:translateY(110%);transition:transform .3s ease;
+  }
+  #dock.show{transform:none}
+  #dock span{font-size:15.5px;color:var(--bone-dim);display:none}
+  @media(min-width:520px){#dock span{display:inline}}
+
+
+  /* ——— орнамент в текстовых секциях ——— */
+  #ai,#howto,#author,#reviews,#pricing,#fit,#faq{overflow:hidden}
+  #ai::before,#howto::before,#author::before,#reviews::before,#pricing::before,#fit::before,#faq::before{
+    content:'';position:absolute;inset:-2px;z-index:0;pointer-events:none;
+    background-image:url('img/mandala.webp');
+    background-repeat:no-repeat;
+    background-size:cover;          /* на всю секцию — жёстких краёв нет */
+    opacity:.4;
+  }
+  /* растворение мягким овалом со всех сторон, у каждой секции свой центр */
+  #howto::before{
+    background-position:12% 40%;
+    -webkit-mask-image:radial-gradient(ellipse 60% 44% at 20% 50%,#000 0%,rgba(0,0,0,.4) 42%,transparent 72%);
+    mask-image:radial-gradient(ellipse 60% 44% at 20% 50%,#000 0%,rgba(0,0,0,.4) 42%,transparent 72%);
+  }
+  #ai::before{
+    background-position:88% 55%;
+    -webkit-mask-image:radial-gradient(ellipse 58% 44% at 82% 48%,#000 0%,rgba(0,0,0,.4) 42%,transparent 72%);
+    mask-image:radial-gradient(ellipse 58% 44% at 82% 48%,#000 0%,rgba(0,0,0,.4) 42%,transparent 72%);
+  }
+  #author::before{
+    background-position:20% 60%;
+    -webkit-mask-image:radial-gradient(ellipse 60% 44% at 18% 52%,#000 0%,rgba(0,0,0,.4) 42%,transparent 72%);
+    mask-image:radial-gradient(ellipse 60% 44% at 18% 52%,#000 0%,rgba(0,0,0,.4) 42%,transparent 72%);
+  }
+  #reviews::before{
+    opacity:.16;
+    background-position:18% 40%;
+    -webkit-mask-image:radial-gradient(ellipse 56% 42% at 84% 48%,#000 0%,rgba(0,0,0,.4) 42%,transparent 72%);
+    mask-image:radial-gradient(ellipse 56% 42% at 84% 48%,#000 0%,rgba(0,0,0,.4) 42%,transparent 72%);
+  }
+  #pricing::before{
+    background-position:15% 45%;
+    -webkit-mask-image:radial-gradient(ellipse 58% 42% at 16% 50%,#000 0%,rgba(0,0,0,.4) 42%,transparent 72%);
+    mask-image:radial-gradient(ellipse 58% 42% at 16% 50%,#000 0%,rgba(0,0,0,.4) 42%,transparent 72%);
+  }
+  #fit::before{
+    background-position:85% 50%;
+    -webkit-mask-image:radial-gradient(ellipse 56% 42% at 84% 50%,#000 0%,rgba(0,0,0,.4) 42%,transparent 72%);
+    mask-image:radial-gradient(ellipse 56% 42% at 84% 50%,#000 0%,rgba(0,0,0,.4) 42%,transparent 72%);
+  }
+  #faq::before{
+    /* узор повторяется, а не растягивается: раскрытие вопросов ничего не масштабирует */
+    background-size:1500px auto;
+    background-repeat:repeat;
+    background-position:50% 0;
+    -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 14%,#000 86%,transparent 100%),
+                       linear-gradient(90deg,#000 0%,rgba(0,0,0,.25) 42%,rgba(0,0,0,.25) 58%,#000 100%);
+    -webkit-mask-composite:source-in;
+    mask-image:linear-gradient(180deg,transparent 0%,#000 14%,#000 86%,transparent 100%),
+               linear-gradient(90deg,#000 0%,rgba(0,0,0,.25) 42%,rgba(0,0,0,.25) 58%,#000 100%);
+    mask-composite:intersect;
+  }
+  /* затемнение под колонкой текста */
+  #ai::after,#howto::after,#author::after,#reviews::after,#pricing::after,#fit::after,#faq::after{
+    content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(ellipse 46% 58% at 50% 50%, rgba(18,12,9,.9) 0%, rgba(18,12,9,.62) 55%, transparent 100%);
+  }
+  #ai .wrap,#howto .wrap,#author .wrap,#reviews .wrap,#pricing .wrap,#fit .wrap,#faq .wrap{position:relative;z-index:1}
+
+  /* подвал */
+  footer{position:relative;overflow:hidden}
+  footer::before{
+    content:'';position:absolute;inset:-2px;z-index:0;pointer-events:none;
+    background:url('img/mandala.webp') no-repeat 50% 55%/cover;
+    opacity:.4;
+    -webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 70%,#000 5%,rgba(0,0,0,.4) 45%,transparent 82%);
+    mask-image:radial-gradient(ellipse 90% 80% at 50% 70%,#000 5%,rgba(0,0,0,.4) 45%,transparent 82%);
+  }
+  footer::after{
+    content:'';position:absolute;inset:0;z-index:0;
+    background:radial-gradient(ellipse 55% 70% at 50% 45%, rgba(18,12,9,.86), rgba(18,12,9,.55));
+  }
+  footer .wrap{position:relative;z-index:1}
+
+
+  /* ——— асимметричная раскладка на широком экране ——— */
+  @media(min-width:1120px){
+    section > .wrap{max-width:1060px;padding:0 40px}
+    section > .wrap > *{max-width:660px}
+    /* текст уходит от орнамента: орнамент слева — текст правее, и наоборот */
+    #howto > .wrap > *,#author > .wrap > *,#pricing > .wrap > *{margin-left:auto;margin-right:0}
+    #ai > .wrap > *,#reviews > .wrap > *,#fit > .wrap > *{margin-left:0;margin-right:auto}
+    #faq > .wrap > *{margin-left:auto;margin-right:auto}
+    #fit .cols{max-width:100%}
+    #howto .steps,#pricing .plans,#pricing > .wrap > div{max-width:660px}
+    #field > .wrap{max-width:1060px}
+    #field > .wrap > *{max-width:100%}
+    h2{font-size:clamp(30px,3.4vw,44px)}
+  }
+
+
+  /* ——— мобильная версия ——— */
+  @media(max-width:600px){
+    body{font-size:17px}
+    .nav-logo .nl-name{font-size:24px}
+    .nav-logo .nl-sub{font-size:11.5px}
+    .kicker{font-size:21px;padding-bottom:10px;margin-bottom:16px}
+    #hero{padding:100px 0 56px}
+    section{padding:64px 0 48px}
+    .wrap{padding:0 20px}
+    h1{font-size:clamp(34px,9vw,44px)}
+    h2{font-size:clamp(26px,7vw,32px)}
+    #hero{min-height:auto;padding:72px 0 56px}
+    #hero .lede{max-width:100%}
+    .cta-row{gap:16px}
+    .btn{padding:15px 26px;font-size:16px}
+    .btn-ghost{margin-left:0}
+    .pull{font-size:20px;padding-left:16px;margin:28px 0}
+    /* поле: цифры мельче, но клетки крупнее пальца */
+    .board{padding:8px;gap:2px;max-width:100%}
+    .cell{font-size:11px;border-radius:1px}
+    .die{width:64px;height:64px;font-size:34px}
+    .readout{min-height:auto;margin-top:20px}
+    .readout .nm{font-size:26px}
+    .readout .say{font-size:16px}
+    .plan{flex-direction:column;gap:6px}
+    .plan .pr{font-size:22px}
+    .rule .mnd{width:56px;height:56px}
+    /* орнамент на телефоне слабее — иначе мешает читать */
+    #ai::before,#howto::before,#author::before,#reviews::before,#pricing::before,#fit::before,#faq::before{opacity:.22}
+    .lotus-layer{opacity:.5}
+    footer{padding:48px 0 120px}
+    #dock{padding:10px 14px;gap:10px}
+  }
+
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  @media(min-width:760px){ .cols{grid-template-columns:1fr 1fr;gap:44px} }
+  @media(max-width:420px){ .cell{font-size:8.5px} .board{gap:2px} }
+</style>
+<!-- Яндекс.Метрика -->
+<script type="text/javascript">
+  (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+  m[i].l=1*new Date();
+  for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+  (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+  ym(109787531, "init", {
+    clickmap: true,
+    trackLinks: true,
+    accurateTrackBounce: true,
+    webvisor: true,
+    ecommerce: "dataLayer"
+  });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/109787531" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+</head>
+<body>
+
+<nav id="nav" aria-label="Разделы страницы">
+  <div class="nav-in">
+    <a class="nav-logo" href="#hero">
+      <span class="nl-name">Лила</span>
+      <span class="nl-sub">игра онлайн, в Telegram</span>
+    </a>
+    <div class="nav-links">
+      <a href="#field">Поле</a>
+      <a href="#live">Живые игры</a>
+      <a href="#pricing">Тарифы</a>
+      <a href="#faq">Вопросы</a>
+    </div>
+    <a class="btn btn-solid nav-cta" href="https://t.me/igra_leela_bot?start=nav">В Telegram</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="shaft"></div>
+  <div class="smoke-layer"></div>
+
+  <div class="wrap">
+    <p class="kicker">Трансформационная игра&#160;Лила&#160;онлайн</p>
+    <h1>Вопрос, который<br>не отпускает<br><em>третий месяц</em></h1>
+    <p class="lede">Индийская игра о собственной жизни: 72 клетки, змеи и стрелы, ход в день. Не даёт ответов — задаёт те вопросы, которые сами себе мы задать не решаемся.</p>
+    <div class="cta-row">
+      <a class="btn btn-solid" href="#field">Сделать первый ход</a>
+      <a class="btn" href="https://t.me/igra_leela_bot?start=hero">Сразу в Telegram</a>
+    </div>
+    <p class="fine" style="margin-top:22px">Первый ход — прямо здесь, на поле. Дальше игра идёт в Telegram: первые три дня без ограничений, потом бесплатно по ходу в день до самого финиша.</p>
+  </div>
+</section>
+
+<section id="howto">
+  <div class="wrap">
+    <h2>Как играть</h2>
+    <ol class="steps">
+      <li><h3>Запрос</h3><p>С чем вы входите в игру. «Что у меня с работой», «почему я снова в этом» — формулировка любая, лишь бы своя, не из списка. Клетки читаются только через ваш вопрос.</p></li>
+      <li><h3>Ход</h3><p>Бросаете кубик — виртуальный или свой настоящий. Попадаете на клетку: у неё есть название, значение и вопрос. Отвечаете. Никто не оценивает.</p></li>
+      <li><h3>Змеи и стрелы</h3><p>Стрела поднимает выше. Змея возвращает назад, к непройденному. Змеи в Лиле — не наказание; обычно как раз на них и происходит самое важное за игру.</p></li>
+      <li><h3>Финиш и разбор</h3><p>Игра заканчивается на клетке Космического сознания. Дальше бот проходит по всем вашим ходам и собирает рефлексию: что повторялось, где вы буксовали, к чему всё вело. Это не предсказание — это ваши же ответы, впервые увиденные целиком. Рефлексия доступна на платном тарифе.</p></li>
+    </ol>
+    <div class="cta-row"><a class="btn" href="https://t.me/igra_leela_bot?start=howto">Сформулировать свой запрос</a></div>
+  </div>
+</section>
+
+<div class="rule"><svg class="mnd" viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="30" cy="30" r="26" opacity=".45"/><circle cx="30" cy="30" r="7" opacity=".8"/><g class="pt"><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(0 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(45 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(90 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(135 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(180 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(225 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(270 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(315 30 30)" opacity=".7"/></g></g><circle cx="30" cy="30" r="2.4" fill="currentColor"/></svg></div>
+
+<section id="field">
+  <div class="wrap">
+    <div class="field-head">
+      <h2>Поле, по которому вы пойдёте</h2>
+      <p>Семьдесят две клетки Хариша Джохари. Бросьте кубик — увидите, как это устроено.</p>
+    </div>
+
+    <div class="board" id="board" role="img" aria-label="Игровое поле Лилы из 72 клеток"></div>
+
+    <div class="readout" id="readout" aria-live="polite">
+      <div class="num" id="ro-num">Клетка 1</div>
+      <div class="nm" id="ro-name">Рождение</div>
+      <div class="say" id="ro-say">Нажмите на кубик — фишка пойдёт по полю.</div>
+      <div class="card" id="ro-card" hidden>
+        <p class="cq" id="ro-q"></p>
+        <p class="ca" id="ro-a"></p>
+      </div>
+    </div>
+
+    <div class="roll-row">
+      <button class="die" id="die" type="button">
+        <span class="pip" id="die-face">⚀</span>
+        <span class="die-label">Бросить кубик</span>
+      </button>
+      <button class="reset" id="reset" type="button">начать сначала</button>
+    </div>
+
+    <div class="modal" id="modal" hidden>
+      <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="m-title">
+        <button class="m-x" id="m-x" type="button" aria-label="Закрыть">×</button>
+        <svg class="m-mnd" viewBox="0 0 60 60" aria-hidden="true">
+          <g fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="30" cy="30" r="26" opacity=".4"/><circle cx="30" cy="30" r="8" opacity=".8"/>
+            <path d="M30 5 C37 14, 37 22, 30 28 C23 22, 23 14, 30 5 Z" opacity=".7"/>
+            <path d="M30 5 C37 14, 37 22, 30 28 C23 22, 23 14, 30 5 Z" transform="rotate(90 30 30)" opacity=".7"/>
+            <path d="M30 5 C37 14, 37 22, 30 28 C23 22, 23 14, 30 5 Z" transform="rotate(180 30 30)" opacity=".7"/>
+            <path d="M30 5 C37 14, 37 22, 30 28 C23 22, 23 14, 30 5 Z" transform="rotate(270 30 30)" opacity=".7"/>
+          </g>
+          <circle cx="30" cy="30" r="2.6" fill="currentColor"/>
+        </svg>
+        <h3 id="m-title">Три ряда пройдено</h3>
+        <p>Дальше поле идёт вверх — до клетки 68, Космического сознания. В боте вы отвечаете на вопрос каждой клетки, ответы сохраняются, а в конце из них собирается рефлексия по всей игре.</p>
+        <a class="btn btn-solid" href="https://t.me/igra_leela_bot?start=demo">Продолжить в боте</a>
+        <button class="reset m-close" id="m-close" type="button">пройти демо заново</button>
+      </div>
+    </div>
+    <div class="cta-row" style="justify-content:center">
+      <a class="btn btn-solid" href="https://t.me/igra_leela_bot?start=field">Начать свою игру</a>
+    </div>
+    <p class="fine" style="text-align:center;margin-top:26px;max-width:44ch;margin-left:auto;margin-right:auto">
+      Ход в сутки — бесплатно и до самого финиша. А приведёте трёх друзей — лимит снимется совсем.
+    </p>
+  </div>
+</section>
+
+<div class="rule"><svg class="mnd" viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="30" cy="30" r="26" opacity=".45"/><circle cx="30" cy="30" r="7" opacity=".8"/><g class="pt"><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(0 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(45 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(90 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(135 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(180 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(225 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(270 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(315 30 30)" opacity=".7"/></g></g><circle cx="30" cy="30" r="2.4" fill="currentColor"/></svg></div>
+
+<section id="ai">
+  <div class="wrap">
+    <h2>Чем бот отличается от промпта для ChatGPT</h2>
+    <p>Промпты для Лилы сейчас лежат в открытом доступе, и вопрос закономерный. Отвечу как есть.</p>
+    <p class="pull">Нейросеть не бросает кубик. Она пишет текст о том, как бросает, — а это разное.</p>
+    <p>Если по ходу разговора модель почувствует, что вам сейчас нужна шестёрка, вы её получите. Вся Лила держится на том, что выпавшее вам не подчиняется. Без этого остаётся вежливая беседа.</p>
+    <p>Здесь бросок случайный по-настоящему — и когда вы жмёте кубик в боте, и когда бросаете свой. Если для вас важен ритуал, бросайте настоящий и вводите результат кнопкой. Многие так и делают.</p>
+    <p>Второе — поле. В длинном диалоге нейросеть начинает путать нумерацию и досочинять клетки, которых нет. Здесь поле зафиксировано: всегда одно и то же, классическое.</p>
+    <p>Третье — память. Диалог живёт до закрытия вкладки. Партия в Лиле идёт неделями. Бот помнит каждый ваш ход с первого дня и в конце соберёт из них общую картину.</p>
+    <div class="cta-row"><a class="btn" href="https://t.me/igra_leela_bot?start=ai">Попробовать</a></div>
+  </div>
+</section>
+
+<div class="rule"><svg class="mnd" viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="30" cy="30" r="26" opacity=".45"/><circle cx="30" cy="30" r="7" opacity=".8"/><g class="pt"><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(0 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(45 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(90 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(135 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(180 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(225 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(270 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(315 30 30)" opacity=".7"/></g></g><circle cx="30" cy="30" r="2.4" fill="currentColor"/></svg></div>
+
+<section id="author">
+  <div class="wrap">
+    <h2>Кто за этим стоит</h2>
+    <p>Четыре года я провожу Лилу вживую — больше ста пятидесяти игр, групповых и один на один. Запросы были всякие: от «не понимаю, что делать с деньгами» до «почему я снова оказалась в этой же точке».</p>
+    <p>Бот вырос из этой практики. Вопросы на клетках, порядок шагов, места, где нужно притормозить, а где лучше промолчать, — всё это не написано с нуля, а собрано за годы наблюдений за тем, что происходит с живыми людьми за игровым полем.</p>
+    <p class="pull">Разница в том, что бот доступен в три часа ночи, идёт в вашем темпе и не требует ни записи, ни расписания.</p>
+    <div class="cta-row"><a class="btn" href="https://t.me/igra_leela_bot?start=author">Начать играть</a></div>
+  </div>
+</section>
+
+<div class="rule"><svg class="mnd" viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="30" cy="30" r="26" opacity=".45"/><circle cx="30" cy="30" r="7" opacity=".8"/><g class="pt"><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(0 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(45 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(90 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(135 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(180 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(225 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(270 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(315 30 30)" opacity=".7"/></g></g><circle cx="30" cy="30" r="2.4" fill="currentColor"/></svg></div>
+
+<section id="reviews">
+  <svg class="mandala16" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g fill="none" stroke="#e0a95a" stroke-width="1.1">
+      <g class="p16"><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(0.0 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(22.5 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(45.0 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(67.5 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(90.0 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(112.5 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(135.0 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(157.5 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(180.0 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(202.5 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(225.0 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(247.5 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(270.0 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(292.5 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(315.0 300 300)"/><path d="M300 96 C 350 160, 350 214, 300 262 C 250 214, 250 160, 300 96 Z" transform="rotate(337.5 300 300)"/></g>
+      <g class="p12" stroke-width=".9"><path d="M300 190 C 322 224, 322 250, 300 274 C 278 250, 278 224, 300 190 Z" transform="rotate(15 300 300)" opacity=".75"/><path d="M300 190 C 322 224, 322 250, 300 274 C 278 250, 278 224, 300 190 Z" transform="rotate(45 300 300)" opacity=".75"/><path d="M300 190 C 322 224, 322 250, 300 274 C 278 250, 278 224, 300 190 Z" transform="rotate(75 300 300)" opacity=".75"/><path d="M300 190 C 322 224, 322 250, 300 274 C 278 250, 278 224, 300 190 Z" transform="rotate(105 300 300)" opacity=".75"/><path d="M300 190 C 322 224, 322 250, 300 274 C 278 250, 278 224, 300 190 Z" transform="rotate(135 300 300)" opacity=".75"/><path d="M300 190 C 322 224, 322 250, 300 274 C 278 250, 278 224, 300 190 Z" transform="rotate(165 300 300)" opacity=".75"/><path d="M300 190 C 322 224, 322 250, 300 274 C 278 250, 278 224, 300 190 Z" transform="rotate(195 300 300)" opacity=".75"/><path d="M300 190 C 322 224, 322 250, 300 274 C 278 250, 278 224, 300 190 Z" transform="rotate(225 300 300)" opacity=".75"/><path d="M300 190 C 322 224, 322 250, 300 274 C 278 250, 278 224, 300 190 Z" transform="rotate(255 300 300)" opacity=".75"/><path d="M300 190 C 322 224, 322 250, 300 274 C 278 250, 278 224, 300 190 Z" transform="rotate(285 300 300)" opacity=".75"/><path d="M300 190 C 322 224, 322 250, 300 274 C 278 250, 278 224, 300 190 Z" transform="rotate(315 300 300)" opacity=".75"/><path d="M300 190 C 322 224, 322 250, 300 274 C 278 250, 278 224, 300 190 Z" transform="rotate(345 300 300)" opacity=".75"/></g>
+      <circle cx="300" cy="300" r="284" stroke-width=".7" opacity=".5"/>
+      <circle cx="300" cy="300" r="268" stroke-width=".4" opacity=".35"/>
+      <circle cx="300" cy="300" r="74" stroke-width=".8" opacity=".6"/>
+      <circle cx="300" cy="300" r="52" stroke="#a33f30" stroke-width="1" opacity=".55"/>
+    </g>
+    <circle cx="300" cy="300" r="7" fill="#e0a95a" opacity=".8"/>
+  </svg>
+  <div class="wrap">
+    <h2>Что говорят те, кто играл</h2>
+    <p class="src">Отзывы участников живых игр — опубликованы в <a href="https://t.me/leelanr">канале</a>, там же можно прочитать их целиком.</p>
+    <div class="review"><p>«Ребята, это Космос! Спасибо за компанию, Наташа, спасибо!!!»</p><span>Дина</span></div>
+    <div class="review"><p>«Было очень комфортно. Во время игры приходит много мыслей и идей для решения вопроса»</p><span>Ольга Г.</span></div>
+    <div class="review"><p>«Спасибо большое за поле, за атмосферу и за классное живое человеческое общение»</p><span>Алла</span></div>
+    <div class="review"><p>«Лила ещё во время игры учила меня быть неудобной. После игры практически пропали из моей жизни люди, систематически нарушавшие границы. Не всегда понимаю, какими будут дальнейшие шаги, но лёд тронулся точно»</p><span>Ольга Ч.</span></div>
+    <div class="review"><p>«В игре я получила ответ, что меня волновало внутри — это отношение к людям. Нежелание вести диалоги, поэтому меня не слышат. Сейчас убираю мусор перед своим проектом»</p><span>Лариса</span></div>
+    <div class="review"><p>«После нашей встречи сходила на игру ключ к себе, потом на другую Лилу. Событий на самом деле много прошло: прошло полтора месяца, а по ощущениям намного больше. С похода к тебе всё началось»</p><span>Алёна</span></div>
+  </div>
+</section>
+
+<div class="rule"><svg class="mnd" viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="30" cy="30" r="26" opacity=".45"/><circle cx="30" cy="30" r="7" opacity=".8"/><g class="pt"><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(0 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(45 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(90 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(135 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(180 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(225 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(270 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(315 30 30)" opacity=".7"/></g></g><circle cx="30" cy="30" r="2.4" fill="currentColor"/></svg></div>
+
+<section id="live">
+  <div class="lotus-layer"></div>
+  <div class="wrap">
+    <h2>Живая игра с проводником</h2>
+    <p>Бот — это Лила наедине с собой: ночью, в тишине, в своём темпе, столько времени, сколько нужно.</p>
+    <p>Живая игра устроена иначе. Круг, ведущий, вопрос, заданный вслух при других людях. Пауза, которую нельзя переждать в переписке и нельзя закрыть, свернув приложение.</p>
+    <p class="pull">То, что в боте вы напишете аккуратно и обтекаемо, вслух так сказать не получится. Вот на этом обычно всё и происходит.</p>
+    <p>Одно не заменяет другое, и порядок чаще такой: сначала бот, потом живая игра. Приходят уже зная поле, понимая механику и, главное, понимая, с чем идут.</p>
+    <p><strong>Живая игра — 5 000 ₽ с человека.</strong> Расписание и анонсы выкладываю в канале.</p>
+    <p class="quiet">Если у вас полугодовая или годовая подписка на бота, живая игра стоит 3 500 ₽.</p>
+    <div class="cta-row"><a class="btn" href="https://t.me/leelanr">Расписание живых игр</a></div>
+  </div>
+</section>
+
+<div class="rule"><svg class="mnd" viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="30" cy="30" r="26" opacity=".45"/><circle cx="30" cy="30" r="7" opacity=".8"/><g class="pt"><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(0 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(45 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(90 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(135 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(180 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(225 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(270 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(315 30 30)" opacity=".7"/></g></g><circle cx="30" cy="30" r="2.4" fill="currentColor"/></svg></div>
+
+<section id="pricing">
+  <div class="wrap">
+    <h2>Сколько стоит играть в боте</h2>
+    <p class="big-free">Первые три дня — без единого ограничения.</p>
+    <p>Отсчёт идёт от первого захода в бота. В эти три дня можно бросать кубик сколько угодно: пройти всю игру за вечер или растянуть на три дня. Такой период даётся один раз.</p>
+
+    <p>Дальше игра остаётся бесплатной — до самого финиша, без оплаты. Меняется только темп: <strong>в день, когда начинаете новую игру, — три хода, в следующие дни — один ход в сутки.</strong></p>
+
+    <p class="quiet">Один ход в сутки — один из форматов, в котором Лилу проходят. У клетки есть время отлежаться, и следующий бросок ложится уже на прожитое, а не поверх непонятого. Кто-то проходит игру за вечер, кто-то делает ход раз в неделю. Правильного темпа нет, есть ваш.</p>
+
+    <div class="gift">
+      <h3>Целая игра без лимита — за приглашение</h3>
+      <p>Приведите трёх друзей — и лимит снимается совсем. Как только каждый из них сделает по три хода, вам открывается игра целиком, без ограничений по ходам.</p>
+    </div>
+
+    <p class="lead-plans">Или открыть доступ сразу. Ходы без ограничений есть в любом платном тарифе — отличаются они тем, что бот добавляет к самой игре.</p>
+
+    <div class="plans">
+      <div class="plan">
+        <div class="nm">Одна игра</div>
+        <div class="pr">910 ₽</div>
+        <div class="ds">Ходы без лимита до самого финиша. Без МАК-карт. До трёх перезапусков.</div>
+      </div>
+      <div class="plan">
+        <div class="nm">Стандарт</div>
+        <div class="pr">2 800 ₽<span>/мес</span></div>
+        <div class="ds">Плюс МАК-карта на каждом ходу.</div>
+      </div>
+      <div class="plan rec">
+        <div class="nm">Полная <span class="mark">рекомендую</span></div>
+        <div class="pr">3 700 ₽<span>/мес</span></div>
+        <div class="ds">Плюс карта дня и связи между играми: бот показывает повторяющиеся сюжеты не только внутри одной игры, но и между разными.</div>
+      </div>
+    </div>
+
+    <p class="lead-plans">Если играете регулярно — выгоднее взять доступ сразу на полгода или год.</p>
+
+    <div class="plans long">
+      <div class="plan">
+        <div class="nm">Полгода</div>
+        <div class="pr">18 000 ₽</div>
+        <div class="ds">3 000 ₽ в месяц вместо 3 700 ₽. Живая игра — 3 500 ₽ вместо 5 000 ₽.</div>
+        <div class="save">−19%</div>
+      </div>
+      <div class="plan best">
+        <div class="nm">Год<span class="mark">выгоднее всего</span></div>
+        <div class="pr">28 000 ₽</div>
+        <div class="ds">2 333 ₽ в месяц вместо 3 700 ₽ — экономия 16 400 ₽ за год. Живая игра — 3 500 ₽ вместо 5 000 ₽.</div>
+        <div class="save big">−37%</div>
+      </div>
+    </div>
+      
+
+    <div class="cta-row">
+      <a class="btn btn-solid" href="https://t.me/igra_leela_bot?start=pricing">Начать бесплатно</a>
+      <a class="btn" href="https://t.me/igra_leela_bot?start=tariff">Выбрать тариф</a>
+    </div>
+  </div>
+</section>
+
+<div class="rule"><svg class="mnd" viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="30" cy="30" r="26" opacity=".45"/><circle cx="30" cy="30" r="7" opacity=".8"/><g class="pt"><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(0 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(45 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(90 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(135 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(180 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(225 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(270 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(315 30 30)" opacity=".7"/></g></g><circle cx="30" cy="30" r="2.4" fill="currentColor"/></svg></div>
+
+<section id="fit">
+  <div class="wrap">
+    <h2>Стоит ли вам играть</h2>
+    <div class="cols">
+      <div>
+        <h3>Приходят обычно с таким</h3>
+        <ul>
+          <li>Третий месяц думаете об уходе с работы и не двигаетесь ни туда, ни сюда</li>
+          <li>Отношения по кругу: другой человек, а сценарий тот же</li>
+          <li>Внешне всё в порядке, но непонятно, зачем всё это</li>
+          <li>Решение принято сто раз и сто раз отложено</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Не стоит, если</h3>
+        <ul>
+          <li>Нужен готовый ответ от кого-то со стороны: в игре вы приходите к нему сами</li>
+          <li>Ждёте предсказания будущего</li>
+          <li>Сейчас по-настоящему тяжело: тут нужен человек — психолог или психотерапевт, а не игра</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"><svg class="mnd" viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="30" cy="30" r="26" opacity=".45"/><circle cx="30" cy="30" r="7" opacity=".8"/><g class="pt"><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(0 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(45 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(90 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(135 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(180 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(225 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(270 30 30)" opacity=".7"/><path d="M30 6 C36 15, 36 21, 30 27 C24 21, 24 15, 30 6 Z" transform="rotate(315 30 30)" opacity=".7"/></g></g><circle cx="30" cy="30" r="2.4" fill="currentColor"/></svg></div>
+
+<section id="faq">
+  <div class="wrap">
+    <h2>Вопросы</h2>
+    <details><summary>Что такое игра Лила?</summary><p>Настольная игра родом из Индии, поле из 72 клеток. Каждая клетка — состояние: рождение, гнев, иллюзия, служение, ясность. Между ними змеи и стрелы, движение — по броску кубика. В том виде, в каком её знают сегодня, игру описал Хариш Джохари в книге 1975 года.</p></details>
+    <details><summary>Игра Лила — это гадание?</summary><p>Нет. Бот ничего не предсказывает и не решает за вас. Клетка задаёт тему, содержание разговора вы приносите сами.</p></details>
+    <details><summary>Нужно во что-то верить?</summary><p>Не обязательно. 72 клетки можно читать как символическую карту сознания, а можно как точный набор тем для разговора с собой. Работает в обоих случаях.</p></details>
+    <details><summary>Сколько идёт одна игра?</summary><p>Зависит от темпа. Без ограничений игру проходят за вечер — и первые три дня в боте как раз без ограничений. Дальше на бесплатном доступе идёт ход в сутки, и до финиша выходит несколько недель. Кто-то намеренно растягивает на месяцы. Правильного темпа нет, есть ваш.</p></details>
+    <details><summary>А если брошу на середине?</summary><p>Партия сохранится. Вернётесь через месяц — продолжите с той же клетки.</p></details>
+    <details><summary>Можно бросать свой кубик?</summary><p>Да. В боте есть кнопки с числами: бросаете настоящий кубик, вводите результат.</p></details>
+    <details><summary>Нужно ставить приложение?</summary><p>Нет, всё происходит в Telegram.</p></details>
+    <details><summary>Чем бот отличается от игры с проводником?</summary><p>Проводник видит вас, слышит паузу, задаёт вопрос, которого нет ни в одном сценарии. Бот так не умеет. Зато он рядом в три часа ночи, стоит дешевле или ничего и никуда не торопит.</p></details>
+    <div class="cta-row"><a class="btn btn-solid" href="https://t.me/igra_leela_bot?start=faq">Сделать первый ход</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap wide">
+    <p class="f-lead">Игра Лила в Telegram</p>
+    <p><a href="https://t.me/igra_leela_bot">@igra_leela_bot</a> — бот с игрой<br>
+       <a href="https://t.me/leelanr">@leelanr</a> — канал живых игр<br>
+       <a href="https://t.me/Natasha_Voicebot">@Natasha_Voicebot</a> — связь по любым вопросам</p>
+
+    <div class="f-legal">
+      <p>Оплата и условия доступа — в самом боте: тарифы, сроки и порядок возврата показываются перед оплатой. На этом сайте платежи не принимаются.</p>
+      <p>Сайт не собирает персональные данные: здесь нет форм, регистрации и входа. Используется обезличенная статистика посещений (Яндекс.Метрика) — она нужна, чтобы понимать, какие разделы читают. Отключить сбор можно в настройках браузера.</p>
+      <p>Игра — инструмент самопознания, а не медицинская или психотерапевтическая помощь. При тяжёлом состоянии обратитесь к специалисту.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="dock">
+  <span>Первый ход — бесплатно</span>
+  <a class="btn btn-solid" href="https://t.me/igra_leela_bot?start=dock">Играть в Telegram</a>
+</div>
+
+<script>
+(function(){
+  var NAMES = ["Рождение","Иллюзия","Гнев","Жадность","Физический план","Заблуждение","Тщеславие","Алчность","Чувственный план",
+  "Очищение","Развлечение","Зависть","Ничтожность","Астральный план","План фантазий","Ревность","Сострадание","План радости",
+  "План кармы","Благотворительность","Искупление","План Дхармы","Небесный план","Плохая компания","Хорошая компания","Печаль","Самоотверженное служение",
+  "Истинная религиозность","Отсутствие религиозности","Хорошие тенденции","План святости","План равновесия","План ароматов","План вкуса","Чистилище","Ясность сознания",
+  "Истинное знание","План жизненной энергии","Апана Лока","Вьяна Лока","Человеческий план","План огня","Рождение человека","Неведение","Правильное знание",
+  "Различение","План нейтральности","Солнечный план","Лунный план","План аскетизма","Земля","План насилия","План жидкостей","План духовной преданности",
+  "Эгоизм","План изначальных вибраций","План воздуха","План сияния","План реальности","Позитивный интеллект","Негативный интеллект","Счастье","Тамас",
+  "Феноменальный план","План внутреннего пространства","План блаженства","План космического блага","Космическое сознание","План абсолюта","Саттвагуна","Раджогуна","Тамогуна"];
+
+  var COLS=9, ROWS=8, board=document.getElementById('board'), cells={};
+
+  // нумерация змейкой снизу вверх, как на настоящем поле
+  for(var vis=ROWS-1; vis>=0; vis--){
+    var base = vis*COLS + 1;
+    var row=[]; for(var c=0;c<COLS;c++) row.push(base+c);
+    if(vis % 2 === 1) row.reverse();
+    row.forEach(function(n){
+      var d=document.createElement('div');
+      d.className='cell'+(n===68?' goal':'');
+      d.setAttribute('data-nm', NAMES[n-1]);
+      d.tabIndex=0;
+      // на телефоне подсказка по касанию: наведения там нет
+      d.addEventListener('click',function(){
+        var was=this.classList.contains('tapped');
+        Object.keys(cells).forEach(function(k){ cells[k].classList.remove('tapped'); });
+        if(!was) this.classList.add('tapped');
+      });
+      d.textContent=n;
+      board.appendChild(d);
+      cells[n]=d;
+    });
+  }
+
+  var DETAIL = {"1":{"i":"Вход в игру: до этого мгновения выбора не было, а с ним открывается целое путешествие. Здесь рождается самостоятельное решение — начать свой собственный путь.","q":"Что значит для меня истинная безопасность в этом моменте?","a":"Я позволяю себе замереть в тишине на 2 минуты, чувствуя своё тело изнутри."},"2":{"i":"Иллюзия власти над тем, что на самом деле течёт само по себе; заметить эту попытку удержания — уже шаг к лёгкости.","q":"Где я создаю иллюзию контроля над тем, что мне неподвластно?","a":"Я останавливаю внутренний диалог на 1 минуту и просто слушаю тишину."},"3":{"i":"Жар, в котором сгорает лишнее, освобождая пространство внутри для более чистого света.","q":"Что во мне сгорает через гнев, чтобы освободить место для света?","a":"Я пишу письмо своему гневу и сжигаю его — освобождая пространство внутри."},"4":{"i":"Голод по тому, что действительно расширяет — знание, смысл, рост; желание, которое ведёт вперёд, а не сжимает.","q":"К чему я жаден по-настоящему, если честно заглянуть внутрь?","a":"Я читаю одну страницу книги, которая расширяет моё сознание."},"5":{"i":"Плотный, вещественный мир тела и опоры под ногами — то, из чего строится начало пути, ещё не зная, чему в итоге послужит.","q":"Что я строю в материальном мире, и служит ли это моей душе?","a":"Я делаю короткую зарядку или разминку, пробуждая тело."},"6":{"i":"Привычная картина мира, принятая за единственную реальность; стоит на мгновение замереть, чтобы заметить — перемена всегда возможна.","q":"Где я считаю свою версию мира единственно возможной?","a":"Я рисую или записываю свой страх — придавая ему форму."},"7":{"i":"Поиск рядом тех, кто отражает обратно чувство собственной значимости, — стремление, за которым не так уж много уверенности в себе самой.","q":"Кого я ищу рядом, чтобы почувствовать себя ценным?","a":"Я пишу 3 качества идеального партнёра — для себя, не для других."},"8":{"i":"Способность заметить и оценить чужой путь без сравнения с собственным — то, что превращает зависть в интерес.","q":"Чей опыт я могу увидеть и оценить сегодня?","a":"Я наблюдаю за одним человеком и отмечаю его сильные стороны."},"9":{"i":"Порог, на котором один цикл желаний завершается, освобождая дорогу к следующему уровню — если дать ему закончиться, а не начинать заново.","q":"Что я завершаю на этом уровне, чтобы двигаться дальше?","a":"Я закрываю глаза и вспоминаю своё самое сильное желание — какое оно?"},"10":{"i":"Медленное освобождение от накопленного шума — тишина, в которой становится слышен собственный внутренний звук.","q":"Что я готов отпустить, чтобы освободить место для нового?","a":"Я принимаю контрастный душ — чувствуя, как вода смывает старое."},"11":{"i":"Лёгкость и ритм, в которых дух отдыхает от серьёзности пути; сама жизнь как танец, а не только как задача.","q":"Что приносит мне истинную радость, без условий?","a":"Я включаю любимую музыку и отдаюсь её ритму."},"12":{"i":"Взгляд, обращённый на чужое вместо своего; приглашение вернуться к собственной опоре и заметить, чего на самом деле не хватает внутри.","q":"Где я завидую чужому потенциалу, забывая о своём?","a":"Я пишу, чему я могу научиться у того, кому я завидую."},"13":{"i":"Момент, когда прежняя опора исчезает, и в этой пустоте неожиданно освобождается место для нового понимания себя.","q":"Что я чувствую, когда восполняю свою энергию?","a":"Я занимаюсь творчеством без цели — просто для процесса."},"14":{"i":"Тонкий мир образов и чувств за пределами видимого — пространство, где рождаются фантазии прежде, чем стать формой.","q":"Какие возможности открываются передо мной?","a":"Я рисую карту своих целей — визуализируя путь."},"15":{"i":"Свобода воображения, ещё не связанная реальностью, — плодородная почва для новых образов, которым только предстоит обрести форму.","q":"Что я могу создать из ничего, из чистой идеи?","a":"Я записываю одну идею для нового проекта."},"16":{"i":"Страх потерять то, что кажется своим; сжатие вокруг человека или вещи вместо доверия потоку жизни.","q":"Где я не доверяю себе или другим, закрывая сердце?","a":"Я пишу, что вызывает мои сомнения и страхи."},"17":{"i":"Открытость к чужой боли без слияния с ней — тепло, которое смягчает и не требует ничего взамен.","q":"Кого я могу простить сегодня, начиная с себя?","a":"Я пишу письмо прощения — себе или другому."},"18":{"i":"Внутреннее ликование, не зависящее от причины, — состояние, в котором сердце расширяется само по себе.","q":"Где я чувствую глубокое удовлетворение жизнью?","a":"Я записываю 3 момента радости за сегодняшний день."},"19":{"i":"Пространство, где становится видно: каждое действие возвращается откликом; момент честного взгляда на связь причины и следствия.","q":"Какие вызовы я выбираю для своего роста?","a":"Я пишу, где я проявляю эгоизм — честно и без оправданий."},"20":{"i":"Действие на благо других без ожидания награды — естественное продолжение чувства единства со всем живым.","q":"Где я могу что-то дать без ожидания, просто потому что могу?","a":"Я перевожу деньги в благотворительный фонд или подаю тем, кто просит на улице."},"21":{"i":"Признание своего пути с прежними ошибками и возвращение к равновесию через честность с самим собой.","q":"Что мне нужно исправить, чтобы двигаться дальше?","a":"Я прошу прощения у себя или у другого — легко и от сердца."},"22":{"i":"Внутренний закон соответствия своей природе — точка, где действие перестаёт быть усилием и становится течением.","q":"Что одновременно благо для меня и для всех вокруг?","a":"Я совершаю поступок, который принесёт пользу миру."},"23":{"i":"Пространство наполненности и лёгкости, к которому тянется душа, уставшая от тяжести земных желаний.","q":"Как я хочу, чтобы помнили обо мне и что хочу оставить после себя?","a":"Я начинаю дело, которое переживёт меня."},"24":{"i":"Окружение, в котором привычные слабости не замечаются, а разрастаются, принимаемые за норму.","q":"Кто в моём окружении забирает мою энергию и силу?","a":"Я ограничиваю общение с одним токсичным человеком — мягко, но твёрдо."},"25":{"i":"Близкие, в присутствии которых видно и своё лучшее, и то, что ещё просит внимания, — поддержка без слепого одобрения.","q":"Кто поддерживает меня и вдохновляет на пути?","a":"Я связываюсь с наставником или единомышленником — делясь теплом."},"26":{"i":"Сжатие, возникающее из потери; покров, под которым легко забыть, что снаружи по-прежнему светло.","q":"Что я должен честно принять, чтобы отпустить боль?","a":"Я пишу о своей боли — честно, без осуждения себя."},"27":{"i":"Действие ради общего, без заботы о личном результате, — точка, где растворяется постоянная тревога о себе.","q":"Кому я служу без ожидания, просто потому что служу?","a":"Я делаю работу на благо группы людей— не ища славы."},"28":{"i":"Жизнь в согласии со своей собственной природой, а не с чужим предписанием, — верность себе как форма верности целому.","q":"Каков мой собственный уникальный путь?","a":"Я пишу 3 своих жизненных принципа — свою опору."},"29":{"i":"Действие наперекор собственной сути, оправданное слепой верой; путь, который незаметно уводит в сторону от себя.","q":"Где я действую из крайности, теряя себя?","a":"Я делаю шаг назад и ничего не делаю 2 минуты — просто стою."},"30":{"i":"Мягкое, естественное движение в сторону всё более тонкой настройки с ритмом жизни.","q":"Что я делаю для своего равновесия и стабильности?","a":"Я делаю 10 минут йоги или дыхания — центрируясь."},"31":{"i":"Ощущение присутствия чего-то большего во всём происходящем — не идея, а прямое, тёплое переживание милости.","q":"Где я вижу проявление высшего в своей жизни?","a":"Я провожу время в природе или молчании — соединяясь с тишиной."},"32":{"i":"Точка покоя между всем, что тянет вниз, и всем, что зовёт вверх, — сердце как место встречи противоположностей.","q":"Где я сохраняю покой и равновесие?","a":"Я практикую созерцание — просто смотрю и не оцениваю."},"33":{"i":"Тонкое, почти неуловимое переживание, свободное от искусственного и лишнего, — узнавание своего подлинного присутствия.","q":"Что я чувствую без прикрас, без масок?","a":"Я зажигаю свечу или благовония и просто смотрю на пламя."},"34":{"i":"Утончённое переживание красоты и удовольствия — не потребление, а способность различать и ценить.","q":"В чём я становлюсь экспертом и мастером?","a":"Я готовлю что-то новое и пробую — оценивая вкус."},"35":{"i":"Прохождение через трудное как через очищение — не наказание, а возможность отпустить то, что тяготило.","q":"Какие последствия я исправляю, двигаясь к свету?","a":"Я пишу список своих «долгов» — не материальных, а душевных."},"36":{"i":"Прозрачность, наступающая после сомнений, — свет, для которого больше нет препятствий.","q":"Что я знаю без сомнений, без колебаний?","a":"Я записываю это знание — чётко и ясно."},"37":{"i":"Понимание истины и того, как жить в согласии с ней, — ещё не свобода, но уже её ясное направление.","q":"Кого я могу научить сегодня, делясь опытом?","a":"Я объясняю что-то сложное простым языком — даруя ясность."},"38":{"i":"Жизненная сила, что течёт через дыхание, поддерживая всё внутреннее движение, — верный, безмолвный спутник каждого мгновения.","q":"Где моя жизненная сила, мой источник?","a":"Я делаю полное дыхание йоги — наполняя себя."},"39":{"i":"Энергия отпускания и освобождения от лишнего — то, что позволяет телу и сознанию очищаться.","q":"Что я выделяю из себя, чтобы очиститься?","a":"Я пью воду с лимоном утром — запуская очищение."},"40":{"i":"Сила, распределяющая жизненную энергию по всему телу, — то, что связывает части в единое, работающее целое.","q":"Что я не могу отпустить, и что держит меня?","a":"Я пишу, что мешает мне распределять энергию."},"41":{"i":"Момент, когда стремления начинают согласовываться с чем-то большим, чем личные желания, — рождение голоса, который хочется разделить с другими.","q":"Какое моё знание я несу в мир, делясь с другими?","a":"Я вступаю в новый проект или группу — расширяя круг."},"42":{"i":"Огонь как источник формы и тепла — сила, которая делает возможным рождение нового и не терпит самообмана.","q":"Что я сжигаю внутри, чтобы обновиться и восстать?","a":"Я зажигаю огонь и смотрю на него 5 минут — очищаясь."},"43":{"i":"Момент, когда человек перестаёт зависеть от чужих определений и находит опору в самой истине.","q":"Где мои слова, мысли и действия едины и цельны?","a":"Я делаю то, что обещал себе — выдерживая слово."},"44":{"i":"Забывание о временности всего происходящего — привязанность к переживанию, принятому за единственную реальность.","q":"Где я путаю себя с чужими отражениями и мнениями?","a":"Я смотрю на ситуацию как на зеркало своей души."},"45":{"i":"Понимание, соединённое с действием, — не просто видеть истину, но и жить в согласии с ней каждый момент.","q":"Что я знаю на основе собственного прожитого опыта?","a":"Я записываю урок из своей жизни — мудрость, которую прошёл."},"46":{"i":"Внутренний голос, отличающий тонкое от плотного, — тихая мудрость, которую невозможно обойти, даже если хочется.","q":"Что я вижу за пределами «хорошо» и «плохо»?","a":"Я созерцаю без оценки — просто принимая то, что есть."},"47":{"i":"Равновесие двух потоков энергии — момент, когда исчезает необходимость выбирать сторону и можно просто наблюдать.","q":"Где я наблюдаю, а не реагирую на происходящее?","a":"Я просто смотрю на происходящее 5 минут — без вовлечения."},"48":{"i":"Активная, направленная вовне энергия — сила действия, которой нужна вторая половина, чтобы не сжигать, а согревать.","q":"Где я разрушаю, чтобы создать новое и более целостное?","a":"Я разбираю одну вещь до основы — понимая её структуру."},"49":{"i":"Принимающая, питающая энергия — источник восстановления и тихой притягательности, не требующей усилия.","q":"Кто притягивается ко мне, и что они видят во мне?","a":"Я записываю качества, которые меня привлекают в других."},"50":{"i":"Готовность встретиться с тем, что накопилось, и отпустить лишнее через дисциплину и внутренний огонь очищения.","q":"Что я готов оставить, чтобы обрести большее?","a":"Я убираю одну зависимость на сегодня — сладость, соцсети."},"51":{"i":"Материнская опора под ногами — терпеливое основание, которое питает и не делает различий между тем, кто на нём стоит.","q":"Какие новые стратегии я вижу на своём пути?","a":"Я записываю 3 новых способа достичь своей цели."},"52":{"i":"Сила, направленная против другого вместо понимания, — искушение, которое дальше всего от того самого единства, что уже открылось.","q":"Где я считаю себя единственно правым, закрывая других?","a":"Я замолкаю в споре на 5 минут — просто слушая."},"53":{"i":"Текучесть, гасящая жар и напряжение, — способность растворять то, что застыло, и снова начать течь.","q":"Как я адаптируюсь к потоку жизни, не сопротивляясь?","a":"Я пью воду осознанно — чувствуя её течение в теле."},"54":{"i":"Доверие, превращающее каждую встречу во встречу с самим Абсолютом, — путь сердца, а не только понимания.","q":"Что для меня священно в этой игре жизни?","a":"Я провожу час в благодарности — за всё, что есть."},"55":{"i":"Момент, когда собственное «я» становится центром всего происходящего, — понятная остановка на пути, но не его цель.","q":"Где я становлюсь жертвой своего собственного «я»?","a":"Я делаю что-то для другого тайно — без желания быть замеченным."},"56":{"i":"Единый звук, что пронизывает всё сущее, — точка, где достаточно затихнуть, чтобы его услышать.","q":"Что я могу изменить вибрацией своего голоса?","a":"Я гудю «Ом» или другую мантру — чувствуя вибрацию."},"57":{"i":"Свобода без формы и веса — состояние, в котором ничто больше не удерживает и не тянет вниз.","q":"Где я свободен от привязанностей и зависимостей?","a":"Я провожу день без телефона — возвращаясь к себе."},"58":{"i":"Свет, который начинает исходить изнутри сам, без источника снаружи, — присутствие, что согревает других просто своим существованием.","q":"Кого озаряет мой внутренний огонь, когда я сияю?","a":"Я зажигаю свет в тёмной комнате — создавая пространство."},"59":{"i":"Точка, где заканчивается путь становления и начинается пребывание в самой сути вещей, — покой без потребности что-либо доказывать.","q":"Какие действия на самом деле ведут меня к моей цели?","a":"Я пишу план на неделю — чётко и реалистично."},"60":{"i":"Ясное, доброжелательное различение, свободное от сомнения в себе, — способность видеть происходящее без искажения.","q":"Что я понял окончательно, через свой опыт?","a":"Я записываю вывод из своей ситуации — ясно и чётко."},"61":{"i":"Сомнение, отрицающее ценность собственного опыта, — водоворот, утягивающий внимание туда, где, кажется, ничего не осталось.","q":"Где я отказываюсь от возможностей из-за сомнений?","a":"Я пишу свои сомнения и сжигаю их — освобождаясь."},"62":{"i":"Ощущение почти достигнутой цели — глубокое узнавание, что путь и правда ведёт домой.","q":"Что я чувствую, когда я близок к своей цели?","a":"Я делаю ещё одно действие вперёд — продолжая движение."},"63":{"i":"Затишье, в котором легко перепутать покой с остановкой, — приглашение вспомнить, что путешествие ещё продолжается.","q":"Где я расслабился слишком рано и потерял фокус?","a":"Я встаю и разминаюсь — возвращая себе энергию."},"64":{"i":"Мир форм и явлений, увиденный уже не как единственная реальность, а как одно из её проявлений, — узнавание источника за многообразием.","q":"К чему я возвращаюсь, ища начало и причину?","a":"Я пишу, что привело меня сюда — в этот момент."},"65":{"i":"Растворение границ отдельного «я» — переживание, в котором исчезает разница между внутренним и внешним.","q":"Что я вижу и понимаю, когда смотрю со стороны?","a":"Я смотрю на ситуацию как наблюдатель — без вовлечения."},"66":{"i":"Чистое переживание бытия, не требующее причины, — то, что было под всеми чувствами с самого начала.","q":"Где я чувствую единство с миром и людьми?","a":"Я провожу время с людьми или в покое — чувствуя связь."},"67":{"i":"Истина, благо и красота, слитые воедино, — точка, ближайшая к завершению пути.","q":"Что я разрушаю, чтобы создать лучшее для всех?","a":"Я начинаю новый проект — с чистым намерением."},"68":{"i":"Пространство за пределами всех форм и планов — дом, к которому вело всё путешествие, и сама его цель.","q":"Что дальше зависит только от меня?","a":"Я праздную своё достижение — признавая свой путь."},"69":{"i":"Пребывание в истине без страха перед возвращением — точка, где твёрдость больше не требует усилия.","q":"Чего я ещё не достиг в своей истине?","a":"Я продолжаю игру без страха — доверяя процессу."},"70":{"i":"Ясность, лёгкость и внутреннее равновесие — качество света, в котором действие происходит без напряжения.","q":"Что очищается во мне через сновидения и покой?","a":"Я записываю свой сон и его смысл — слушая подсознание."},"71":{"i":"Активность и движение, направленные вовне, — сила действия, которая может согревать, а может истощать, в зависимости от того, куда направлена.","q":"Где моя деятельность приводит к страданиям и усталости?","a":"Я снижаю свой темп на 50% — замедляясь."},"72":{"i":"Покой, переходящий в инерцию, — момент, после которого начинается новый цикл и новая попытка подняться.","q":"Где я подменяю понятия и теряю ясность?","a":"Я пишу, что в моей жизни «не то, чем кажется»."}};
+  var pos=1, rolls=0, faces=['⚀','⚁','⚂','⚃','⚄','⚅'];
+  var die=document.getElementById('die'), face=document.getElementById('die-face');
+  var roNum=document.getElementById('ro-num'), roName=document.getElementById('ro-name'), roSay=document.getElementById('ro-say');
+  var card=document.getElementById('ro-card'), cQ=document.getElementById('ro-q'), cA=document.getElementById('ro-a');
+  var modal=document.getElementById('modal');
+  var LIMIT=27;               // конец третьего ряда
+
+  function paint(){
+    Object.keys(cells).forEach(function(k){ cells[k].classList.remove('here'); });
+    cells[pos].classList.add('here','trail');
+    roNum.textContent='Клетка '+pos;
+    roName.textContent=NAMES[pos-1];
+
+    var d=DETAIL[pos];
+    if(rolls>0 && d){
+      cQ.textContent=d.q; cA.textContent=d.a;
+      cQ.hidden=!d.q; cA.hidden=!d.a;
+      card.hidden=false; roSay.hidden=true;
+    } else {
+      card.hidden=true; roSay.hidden=false;
+      roSay.textContent='Нажмите на кубик — фишка пойдёт по полю.';
+    }
+    die.classList.toggle('idle', rolls===0);
+  }
+  paint();
+
+  function openModal(){
+    ymGoal('demo_finished');
+    modal.hidden=false;
+    document.body.style.overflow='hidden';
+    var b=modal.querySelector('.btn'); if(b) b.focus();
+  }
+  function closeModal(){
+    modal.hidden=true;
+    document.body.style.overflow='';
+  }
+
+  die.addEventListener('click',function(){
+    var n=Math.floor(Math.random()*6)+1;
+    face.textContent=faces[n-1];
+    die.classList.remove('spin'); void die.offsetWidth; die.classList.add('spin');
+    rolls++;
+    if(rolls===1) ymGoal('dice_first_roll');
+    var next=pos+n;
+    if(next>LIMIT){          // за третий ряд не пускаем — показываем окно
+      pos=LIMIT;
+      paint();
+      setTimeout(openModal, 650);
+      return;
+    }
+    pos=next;
+    paint();
+    if(pos===LIMIT) setTimeout(openModal, 900);
+  });
+
+  document.getElementById('m-x').addEventListener('click',closeAndReset);
+  document.getElementById('m-close').addEventListener('click',function(){
+    closeModal();
+    Object.keys(cells).forEach(function(k){ cells[k].classList.remove('trail','here'); });
+    pos=1; rolls=0; face.textContent=faces[0]; paint();
+  });
+
+  function closeAndReset(){
+    closeModal();
+    Object.keys(cells).forEach(function(k){ cells[k].classList.remove('trail','here'); });
+    pos=1; rolls=0; face.textContent=faces[0]; paint();
+  }
+  modal.addEventListener('click',function(e){ if(e.target===modal) closeAndReset(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !modal.hidden) closeAndReset(); });
+
+  document.getElementById('reset').addEventListener('click',function(){
+    Object.keys(cells).forEach(function(k){ cells[k].classList.remove('trail','here'); });
+    pos=1; rolls=0; face.textContent=faces[0]; paint();
+  });
+
+
+  // Цели Яндекс.Метрики
+  function ymGoal(name){ if (typeof ym === 'function') ym(109787531, 'reachGoal', name); }
+  document.querySelectorAll('a[href*="t.me/igra_leela_bot"]').forEach(function(a){
+    a.addEventListener('click', function(){
+      var m = (a.href.match(/start=(\w+)/) || [])[1] || 'other';
+      ymGoal('bot_click');          // общая цель: ушёл в бота
+      ymGoal('bot_click_' + m);     // с какого блока
+    });
+  });
+
+  var hero=document.getElementById('hero'), dock=document.getElementById('dock'), nav=document.getElementById('nav');
+  new IntersectionObserver(function(e){
+    var away = !e[0].isIntersecting;
+    dock.classList.toggle('show', away);
+    nav.classList.toggle('show', away);
+  },{threshold:0}).observe(hero);
+})();
+</script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Что такое игра Лила?","acceptedAnswer":{"@type":"Answer","text":"Настольная игра родом из Индии, поле из 72 клеток. Каждая клетка — состояние: рождение, гнев, иллюзия, служение, ясность. Между ними змеи и стрелы, движение — по броску кубика. В том виде, в каком её знают сегодня, игру описал Хариш Джохари в книге 1975 года."}},
+{"@type":"Question","name":"Игра Лила — это гадание?","acceptedAnswer":{"@type":"Answer","text":"Нет. Бот ничего не предсказывает и не решает за вас. Клетка задаёт тему, содержание разговора вы приносите сами."}},
+{"@type":"Question","name":"Нужно во что-то верить?","acceptedAnswer":{"@type":"Answer","text":"Не обязательно. 72 клетки можно читать как символическую карту сознания, а можно как точный набор тем для разговора с собой."}},
+{"@type":"Question","name":"Сколько идёт одна игра?","acceptedAnswer":{"@type":"Answer","text":"Зависит от темпа. Без ограничений игру проходят за вечер. На бесплатном доступе — по ходу в день, и до финиша выходит несколько недель."}},
+{"@type":"Question","name":"А если брошу на середине?","acceptedAnswer":{"@type":"Answer","text":"Партия сохранится. Вернётесь через месяц — продолжите с той же клетки."}},
+{"@type":"Question","name":"Можно бросать свой кубик?","acceptedAnswer":{"@type":"Answer","text":"Да. В боте есть кнопки с числами: бросаете настоящий кубик, вводите результат."}},
+{"@type":"Question","name":"Нужно ставить приложение?","acceptedAnswer":{"@type":"Answer","text":"Нет, всё происходит в Telegram."}},
+{"@type":"Question","name":"Чем бот отличается от игры с проводником?","acceptedAnswer":{"@type":"Answer","text":"Проводник видит вас, слышит паузу, задаёт вопрос, которого нет ни в одном сценарии. Бот так не умеет. Зато он рядом в три часа ночи, стоит дешевле или ничего и никуда не торопит."}}]}
+</script>
+</body>
+</html>
